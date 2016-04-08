@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'webparser',
 )
 
@@ -107,3 +108,27 @@ STATICFILES_DIRS = ( os.path.join( BASE_DIR, "static" ), )
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,"media_storage")
 
+
+# Cache
+# https://docs.djangoproject.com/en/1.8/topics/cache/#local-memory-caching
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
+# Django Q
+# https://django-q.readthedocs.org/en/latest/configure.html
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 1,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
