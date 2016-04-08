@@ -1,0 +1,29 @@
+
+.container .header {
+	margin-top: 20px;
+}
+
+.container .header .nav a {
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+.footer .row a {
+	display: block;
+	width: 500px;
+	margin: 0 auto;
+}
+
+.content {
+	margin-bottom: 20px;
+}
+
+.technology {
+	margin-top: 20px;
+}
+
+
+.execution-log, .results-log {
+	font-size: 12px;
+	line-height: 14px;
+}
