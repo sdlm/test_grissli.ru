@@ -20,6 +20,9 @@ from threading import Thread
 # my
 from webparser.models import *
 
+# Django
+from django.conf import settings
+
 # ----------------------------------------------- helpers
 def getException():
 	exc_type, exc_obj, tb = sys.exc_info()
@@ -38,7 +41,7 @@ def has_charset(tag):
 
 
 class Manager(object):
-	"""docstring for Manager"""
+	"""Класс для манипуляции пула потоков при парсинге большого кол-ва страниц."""
 
 	def __init__(self, num_threads = None):
 		self.__num_threads = num_threads if num_threads != None else 10
@@ -76,21 +79,30 @@ class Manager(object):
 			self.__q.task_done()
 
 	def addUrl(self, url, timeShift = None):
-		assert(type(url) == str or type(url) == unicode)
-		if timeShift != None:
-			assert(type(timeShift) == timedelta)
-			time.sleep(timeShift.seconds)
+		time.sleep(timeShift.seconds)
 		self.__q.put((url, timeShift))
 
 
 
 
-def worker(url, timeShift = None):
+def worker(url, timeShift = None, addTarget = False):
+
+	# verification
+	assert(type(url) == str or type(url) == unicode)
+	if timeShift != None:
+		assert(type(timeShift) == timedelta)
+
+	if addTarget:
+		target = Target()
+		target.url = url
+		target.timeShift = timeShift
+		target.save()
+
 	thread.start_new_thread( __inner_worker, (url, timeShift) )
 	# webParser(url)
 
 
-mm = Manager()
+mm = Manager(settings.THREADS_COUNT)
 
 def __inner_worker(url, timeShift = None):
 	time.sleep(timeShift.seconds)

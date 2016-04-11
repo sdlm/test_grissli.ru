@@ -25,4 +25,6 @@ urlpatterns = [
 
     url(r'^$', wp_views.index, name='index'),
 
+    url(r'^api/admin', wp_views.admin, name='admin'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
