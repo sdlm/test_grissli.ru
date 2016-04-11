@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 
-{% block content %}
-<h3>Лог запусков</h3>
-<textarea class="form-control execution-log" rows="6">{%autoescape off%}{{runLog}}{%endautoescape%}</textarea>
 
-<h3>Лог результатов</h3>
-<textarea class="form-control results-log" rows="18">{%autoescape off%}{{results}}{%endautoescape%}</textarea>
+{% block content %}
+<div class="row content">
+  <div class="col-md-12">
+  
+    <h3>Лог запусков</h3>
+    <textarea class="form-control execution-log" rows="6">{%autoescape off%}{{runLog}}{%endautoescape%}</textarea>
+
+  </div>
+</div>
+
+<div class="row content">
+  <div class="col-md-12">
+  
+    <h3>Лог результатов</h3>
+    <textarea class="form-control results-log" rows="18">{%autoescape off%}{{results}}{%endautoescape%}</textarea>
+
+  </div>
+</div>
 {% endblock %}

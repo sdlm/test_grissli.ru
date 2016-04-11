@@ -19,6 +19,8 @@ class TargetForm(forms.ModelForm):
 		model = Target
 		fields = ['url', 'timeShift', ]
 
+
+
 @admin.register(Target)
 class TargetAdmin(admin.ModelAdmin):
 	list_display = ('url', 'timeShift',)
@@ -26,7 +28,10 @@ class TargetAdmin(admin.ModelAdmin):
 
 	def save_model(self, request, obj, form, change):
 
-		thread.start_new_thread( worker, (obj.url, obj.timeShift) )
+		# thread.start_new_thread( worker, (obj.url, obj.timeShift) )
+		# thread.start_new_thread( worker, (obj.url, obj.timeShift) )
+		obj.url = obj.url.strip()
+		worker(obj.url, obj.timeShift)
 
 		obj.save()
 

@@ -31,7 +31,10 @@ def index(request):
 	print 'results len: {}'.format(len(results))
 	results_plain = ''
 	for r in results:
-		results_plain += u'encoding: {}, title: "{}"'.format(r.encoding, r.title)
+		results_plain += u'encoding: {}, title: "{}"'.format(
+				r.encoding if r.encoding != None else 'undef',
+				r.title
+			)
 		if r.h1 != None:
 			results_plain += u', h1: "{}"\n'.format(r.h1)
 		else:
@@ -47,6 +50,7 @@ def index(request):
 		'page': 'index',
 		'runLog': runLog_plain,
 		'results': results_plain,
+		'url_form': TargetForm(),
 	}
 	context = RequestContext(request, content)
 	return HttpResponse(template.render(context))

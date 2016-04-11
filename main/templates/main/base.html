@@ -49,12 +49,8 @@
         </nav>
       </div>
 
-      <div class="row content">
-        <div class="col-md-12">
-          {% block content %}
-          {% endblock %}
-        </div>
-      </div>
+      {% block content %}
+      {% endblock %}
 
       <div role="alert" class="alert alert-danger">
         <strong>Внимание!</strong> Для тестирования можно использовать аккаунт admin/admin.
@@ -105,6 +101,9 @@
 
     <!-- cookie -->
     <script src="{% static 'js/jquery.cookie.min.js' %}"></script>
+
+    <!-- my -->
+    <script src="{% static 'js/script.js' %}"></script>
 
   </body>
 </html>
