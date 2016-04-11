@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'webparser',
+    'django_socketio',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,8 +106,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join( BASE_DIR, "static_storage" )
 STATICFILES_DIRS = ( os.path.join( BASE_DIR, "static" ), )
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,"media_storage")
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR,"media_storage")
 
 
 # Cache
@@ -122,3 +123,6 @@ CACHES = {
 
 # Threading
 THREADS_COUNT = 10
+
+SOCKETIO_HOST = 'localhost'
+SOCKETIO_PORT = '8080'

@@ -23,6 +23,9 @@ from webparser.models import *
 # Django
 from django.conf import settings
 
+# django_socketio
+import django_socketio
+
 # ----------------------------------------------- helpers
 def getException():
 	exc_type, exc_obj, tb = sys.exc_info()
@@ -73,6 +76,8 @@ class Manager(object):
 				result.title = title
 				result.h1 = h1
 				result.save()
+
+				django_socketio.broadcast_channel({'action': 'update'}, channel='terminal')
 			except:
 				pass
 
@@ -105,7 +110,8 @@ def worker(url, timeShift = None, addTarget = False):
 mm = Manager(settings.THREADS_COUNT)
 
 def __inner_worker(url, timeShift = None):
-	time.sleep(timeShift.seconds)
+	# time.sleep(timeShift.seconds)
+	global mm
 	mm.addUrl(url, timeShift)
 
 

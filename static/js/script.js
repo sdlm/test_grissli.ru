@@ -33,6 +33,28 @@ function prepareAJAX() {
 
 $( document ).ready(function() {
 
+	var socket = new io.Socket();
+	socket.connect();
+	socket.on('connect', function() {
+		socket.subscribe('terminal');
+		// socket.broadcast_channel("hello");
+		// socket.send("hello");
+		socket.on('message',function(data) {
+			console.log('Received a message from the server!',data);
+			if (data.action === 'update') {
+				console.log('Yahoo!!!');
+				socket.send("update");
+
+			}
+			if (data.action === 'render') {
+				$('.execution-log').val(data.runLog);
+				$('.results-log').val(data.resultsLog);
+			}
+		});
+		
+	});
+
+
 	$('.modal-content #timeInput').mask("99:99");
 
 	var execLog = $('.execution-log');
@@ -76,6 +98,15 @@ $( document ).ready(function() {
 		});
 	});
 	$('.confirm-add-urls-list').click(function(){
+		prepareAJAX();
 
+		$.ajax({
+			type: "POST",
+			url: "/api/admin",
+			dataType: 'json',
+			data: {
+				action: 'check',
+			}
+		});
 	});
 });

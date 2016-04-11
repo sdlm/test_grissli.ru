@@ -4,18 +4,22 @@
 import time
 from datetime import timedelta
 
-# ---------------------------------------------------- Django
+# Django
 from django.shortcuts import render
-from django.template import RequestContext, loader
 from django.http import HttpResponse, JsonResponse
+from django.template import RequestContext, loader
 # from django.conf import settings
 
+# my
 from webparser.models import *
 from webparser.tasks import *
 
+# django_socketio
+import django_socketio as io
+from django_socketio.events import on_message
+# from django_socketio import broadcast_channel
 
-
-
+# 
 from pprint import pprint
 from datetime import datetime
 import traceback, linecache
@@ -69,9 +73,7 @@ def printException(getErrorStack = False, file = None):
 		return rez
 
 
-
-def index(request):
-
+def getRunLogPlainText():
 	runLogRecords = TaskRunLog.objects.all()
 	print 'runLogRecords len: {}'.format(len(runLogRecords))
 	runLog_plain = ''
@@ -85,7 +87,10 @@ def index(request):
 			runLog_plain += ' comment: {}\n'.format(rec.comment)
 		else:
 			runLog_plain += '\n'
+	return runLog_plain
 
+
+def getResultsLogPlainText():
 	results = ResultLog.objects.all()
 	print 'results len: {}'.format(len(results))
 	results_plain = ''
@@ -98,22 +103,26 @@ def index(request):
 			results_plain += u', h1: "{}"\n'.format(r.h1)
 		else:
 			results_plain += '\n'
+	return results_plain
+
+
+
+
+def index(request):
 	
-	encoding = models.CharField(max_length=32)
-	title = models.CharField(max_length=1024)
-	h1 = models.CharField(max_length=1024)
-
-
-	template = loader.get_template('webparser/index.html')
 	content = {
 		'page': 'index',
-		'runLog': runLog_plain,
-		'results': results_plain,
+		'runLog': getRunLogPlainText(),
+		'resultsLog': getResultsLogPlainText(),
 		'url_form': TargetForm(),
+		# bugfix for django_socketio
+		'STATIC_URL': '/static/',
+		'MEDIA_URL': '/media/',
 	}
-	context = RequestContext(request, content)
-	return HttpResponse(template.render(context))
+	return render(request, 'webparser/index.html', content);
 
+
+# ----------------------- AJAX API
 
 def admin(request):
 
@@ -152,13 +161,11 @@ def admin(request):
 			else:
 				return JsonResponse( {'success': success}, safe = False )
 
-
 			shift = timedelta(seconds = sec)
 			worker(url, shift, addTarget = True)
 
-		elif action == 'check':
-			lastId = TaskRunLog.objects.values('id').order_by('-id')[0]
-			return JsonResponse( {'success': success, 'id': lastId}, safe = False )
+		if action == 'update':
+			return JsonResponse( {'success': success}, safe = False )
 
 		success = True
 
@@ -166,3 +173,16 @@ def admin(request):
 		printException()
 
 	return JsonResponse( {'success': success}, safe = False )
+
+@on_message(channel="terminal")
+def my_message_handler(request, socket, context, message):
+	print 'executed my_message_handler !!'
+
+	if message == 'update':
+		content = {
+			'action': 'render',
+			'success': True,
+			'runLog': getRunLogPlainText(),
+			'resultsLog': getResultsLogPlainText(),
+		}
+		socket.send(content)
