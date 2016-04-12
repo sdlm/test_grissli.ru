@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 
 # system
-import sys, os
+import re
 import time
 from datetime import timedelta
-import re
-import linecache
 
 # webparsing
 import requests
@@ -19,30 +17,21 @@ from threading import Thread
 
 # my
 from webparser.models import *
+from main.wide import *
+from webparser.socketio_api import *
 
 # Django
 from django.conf import settings
 
-# django_socketio
-import django_socketio
 
 # ----------------------------------------------- helpers
-def getException():
-	exc_type, exc_obj, tb = sys.exc_info()
-	__frame = tb.tb_frame
-	lineno = tb.tb_lineno
-	filename = __frame.f_code.co_filename
-	linecache.checkcache(filename)
-	line = linecache.getline(filename, lineno, __frame.f_globals).strip()
-
-	return 'file: {0}:{1}, type: {2}, error: {3}'.format(filename, lineno, exc_type, exc_obj)
 
 def has_charset(tag):
 	return tag.has_attr('charset')
 
 
-
-
+# ----------------------------------------------- thread manager
+	
 class Manager(object):
 	"""Класс для манипуляции пула потоков при парсинге большого кол-ва страниц."""
 
@@ -56,8 +45,8 @@ class Manager(object):
 			worker.start()
 
 	def __do_stuff(self):
+
 		while True:
-			# print self.__q.get()
 			url, timeShift = self.__q.get()
 			print 'Manager.__do_stuff(): {}'.format(url)
 
@@ -77,9 +66,9 @@ class Manager(object):
 				result.h1 = h1
 				result.save()
 
-				django_socketio.broadcast_channel({'action': 'update'}, channel='terminal')
+				updateClientsData()
 			except:
-				pass
+				getException(printout=True)
 
 			self.__q.task_done()
 
@@ -88,7 +77,14 @@ class Manager(object):
 		self.__q.put((url, timeShift))
 
 
+mm = Manager(settings.THREADS_COUNT)
 
+def __inner_worker(url, timeShift = None):
+	global mm
+	mm.addUrl(url, timeShift)
+
+
+# ----------------------------------------------- func for add task
 
 def worker(url, timeShift = None, addTarget = False):
 
@@ -104,17 +100,9 @@ def worker(url, timeShift = None, addTarget = False):
 		target.save()
 
 	thread.start_new_thread( __inner_worker, (url, timeShift) )
-	# webParser(url)
 
 
-mm = Manager(settings.THREADS_COUNT)
-
-def __inner_worker(url, timeShift = None):
-	# time.sleep(timeShift.seconds)
-	global mm
-	mm.addUrl(url, timeShift)
-
-
+# ----------------------------------------------- parser
 	
 def webParser(url, timeShift):
 	try:

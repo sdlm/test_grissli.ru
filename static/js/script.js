@@ -30,33 +30,7 @@ function prepareAJAX() {
 	});
 }
 
-
-$( document ).ready(function() {
-
-	var socket = new io.Socket();
-	socket.connect();
-	socket.on('connect', function() {
-		socket.subscribe('terminal');
-		// socket.broadcast_channel("hello");
-		// socket.send("hello");
-		socket.on('message',function(data) {
-			console.log('Received a message from the server!',data);
-			if (data.action === 'update') {
-				console.log('Yahoo!!!');
-				socket.send("update");
-
-			}
-			if (data.action === 'render') {
-				$('.execution-log').val(data.runLog);
-				$('.results-log').val(data.resultsLog);
-			}
-		});
-		
-	});
-
-
-	$('.modal-content #timeInput').mask("99:99");
-
+function scrollDown() {
 	var execLog = $('.execution-log');
 	if(execLog.length) {
 		execLog.scrollTop(execLog[0].scrollHeight - execLog.height());
@@ -66,7 +40,35 @@ $( document ).ready(function() {
 	if(resultLog.length) {
 		resultLog.scrollTop(resultLog[0].scrollHeight - resultLog.height());
 	}
+}
 
+
+$( document ).ready(function() {
+
+	// scroll terminals
+	scrollDown();
+
+	// setup WebSocket
+	var socket = new io.Socket();
+	socket.connect();
+	socket.on('connect', function() {
+		socket.subscribe('terminal');
+
+		socket.on('message',function(data) {
+			console.log('Received a message from the server!', data);
+			if (data.action === 'rerender_terminals') {
+				$('.execution-log').val(data.runLog);
+				$('.results-log').val(data.resultsLog);
+				scrollDown();
+			}
+		});
+		
+	});
+
+	// setup modal window input
+	$('.modal-content #timeInput').mask("99:99");
+
+	// setup modal window actions
 	$('.confirm-add-url').click(function(){
 		prepareAJAX();
 
