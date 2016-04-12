@@ -20,3 +20,8 @@ test task for vacancy python-developer in company grissli.ru
 # Решение
 
 
+
+
+
+c virtualenv может возникнуть проблема "name 'PROTOCOL_SSLv3' is not defined"
+решение см. здесь https://github.com/mistio/mist.io/issues/434

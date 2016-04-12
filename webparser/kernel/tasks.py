@@ -151,7 +151,7 @@ def webParser(url, timeShift):
 		if not (re.match('^http://', url) or re.match('^https://', url)):
 			url = 'http://' + url
 		r = requests.get(url, headers = headers)
-		soup = BeautifulSoup(r.text)
+		soup = BeautifulSoup(r.text, "html.parser")
 
 		title = None
 		titleTag = soup.find('title')
