@@ -28,3 +28,7 @@
 	line-height: 14px;
 	font-family: 'Inconsolata', 'Courier New', monospace;
 }
+
+.drop-results-button {
+	margin-right: 10px;
+}

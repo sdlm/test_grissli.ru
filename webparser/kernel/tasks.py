@@ -18,7 +18,8 @@ from threading import Thread
 # my
 from webparser.models import *
 from main.wide import *
-from webparser.socketio_api import *
+
+import socketio_api 
 
 # Django
 from django.conf import settings
@@ -28,6 +29,40 @@ from django.conf import settings
 
 def has_charset(tag):
 	return tag.has_attr('charset')
+
+def getSuccessCount():
+	return TaskRunLog.objects.filter(status=0).count()
+def getFailCount():
+	return TaskRunLog.objects.filter(status=1).count()
+
+def getRunLogPlainText():
+	runLogRecords = TaskRunLog.objects.all()
+	runLog_plain = ''
+	for rec in runLogRecords:
+		runLog_plain += '{} [{}] url: {}'.format(
+				rec.timeStamp.strftime('%d.%m.%Y %H:%M:%S'), 
+				'success' if rec.status == 0 else 'failure',
+				rec.url
+			)
+		if rec.comment != None:
+			runLog_plain += ' comment: {}\n'.format(rec.comment)
+		else:
+			runLog_plain += '\n'
+	return runLog_plain
+
+def getResultsLogPlainText():
+	results = ResultLog.objects.all()
+	results_plain = ''
+	for r in results:
+		results_plain += u'encoding: {}, title: "{}"'.format(
+				r.encoding if r.encoding != None else 'undef',
+				r.title
+			)
+		if r.h1 != None:
+			results_plain += u', h1: "{}"\n'.format(r.h1)
+		else:
+			results_plain += '\n'
+	return results_plain
 
 
 # ----------------------------------------------- thread manager
@@ -66,7 +101,7 @@ class Manager(object):
 				result.h1 = h1
 				result.save()
 
-				updateClientsData()
+				socketio_api.updateClientsData()
 			except:
 				getException(printout=True)
 
@@ -102,6 +137,12 @@ def worker(url, timeShift = None, addTarget = False):
 	thread.start_new_thread( __inner_worker, (url, timeShift) )
 
 
+def dropResults():
+	ResultLog.objects.all().delete()
+	TaskRunLog.objects.all().delete()
+	socketio_api.updateClientsData()
+
+
 # ----------------------------------------------- parser
 	
 def webParser(url, timeShift):
@@ -112,7 +153,10 @@ def webParser(url, timeShift):
 		r = requests.get(url, headers = headers)
 		soup = BeautifulSoup(r.text)
 
-		title = soup.find('title').text.strip()
+		title = None
+		titleTag = soup.find('title')
+		if titleTag != None:
+			title = titleTag.text.strip()
 		encoding = None
 		encodingTag = soup.find('meta', {'http-equiv': 'content-type'})
 		if encodingTag == None:
@@ -131,6 +175,8 @@ def webParser(url, timeShift):
 		if h1tag != None:
 			h1 = h1tag.text.strip()
 	except:
+		getException(printout=True)
+
 		record = TaskRunLog()
 		record.url = url
 		record.timeShift = timeShift

@@ -63,3 +63,5 @@ target/
 
 # my
 webparser/migrations/*
+static_storage/*
+media_storage/*

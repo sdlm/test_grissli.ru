@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 
 {% block content %}
 <div class="row content">
@@ -11,6 +11,14 @@
 
 <div class="row content">
   <div class="col-md-12">
+
+    <button type="button" class="btn btn-success success-counter{% if count.success == 0 %} hide{% endif %}">
+      Success <span class="badge">{{count.success}}</span>
+    </button>
+    <button type="button" class="btn btn-danger failure-counter{% if count.failure == 0 %} hide{% endif %}">
+      Failure <span class="badge">{{count.failure}}</span>
+    </button>
+
     <div class="btn-group pull-right">
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#add-url">Добавить URL</button>
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,8 +27,14 @@
       </button>
       <ul class="dropdown-menu">
         <li><a href="#" data-toggle="modal" data-target="#add-urls-list">Добавить список</a></li>
+        <li><a href="{% static 'test.txt' %}">Пример списка</a></li>
       </ul>
     </div>
+
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default drop-results-button" data-toggle="modal" data-target="#drop-results">Сбросить результаты</button>
+    </div>
+
   </div>
 </div>
 
@@ -40,8 +54,6 @@
       </div>
       <form>
         <div class="modal-body">
-          {% csrf_token %}
-
           <div class="form-group">
             <label for="titleInput">URL</label>
             <input type="text" class="form-control" id="urlInput" placeholder="www.domain.com">
@@ -71,7 +83,6 @@
       </div>
       <form>
         <div class="modal-body">
-          {% csrf_token %}
           <p>Формат списка: <code>[mm:ss] url</code>.</p>
 
           <div class="form-group">
@@ -83,6 +94,26 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
           <button type="button" class="btn btn-primary confirm-add-urls-list">Подтвердить</button>
+        </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="drop-results" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Удаление результатов</h4>
+      </div>
+      <form>
+        <div class="modal-body">
+          <p>Вы уверены что хотите удалить все результаты ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-danger confirm-drop-results">Подтвердить</button>
         </div>
       </form>
     </div><!-- /.modal-content -->
