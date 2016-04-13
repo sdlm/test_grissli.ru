@@ -14,13 +14,13 @@ def getException(printout=False):
 	line = linecache.getline(filename, lineno, __frame.f_globals).strip()
 
 	if printout:
-		print '-'*50
-		print '{0:>40}: {1}'.format( 'Exception in file {0}'.format(filename), lineno )
-		print '{0:>40}: {1}'.format( 'line', line )
-		print '{0:>40}: {1}'.format( 'type', exc_type )
-		print '{0:>40}: {1}'.format( 'message', exc_obj )
-		print 'full traceback:'
+		print('-'*50)
+		print('{0:>40}: {1}'.format( 'Exception in file {0}'.format(filename), lineno ))
+		print('{0:>40}: {1}'.format( 'line', line ))
+		print('{0:>40}: {1}'.format( 'type', exc_type ))
+		print('{0:>40}: {1}'.format( 'message', exc_obj ))
+		print('full traceback:')
 		traceback.print_exc()
-		print '-'*50
+		print('-'*50)
 
 	return 'file: {0}:{1}, type: {2}, error: {3}'.format(filename, lineno, exc_type, exc_obj)

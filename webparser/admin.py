@@ -7,7 +7,7 @@ from django import forms
 
 # my
 from webparser.models import *
-from webparser.kernel import worker
+from webparser.kernel.tasks import worker
 
 
 class TargetForm(forms.ModelForm):

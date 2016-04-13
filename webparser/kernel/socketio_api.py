@@ -19,10 +19,10 @@ def prepareData():
 	}
 
 def updateClientsData():
-	print 'updateClientsData()'
+	print('updateClientsData()')
 	try:
 		broadcast_channel(prepareData(), channel='terminal')
-		print 'successfully send message !'
+		print('successfully send message !')
 	except:
 		getException(printout=True)
 

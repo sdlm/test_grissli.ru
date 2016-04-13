@@ -1,6 +1,9 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
+# python 2-3 compatible
+from future.utils import raise_with_traceback
+
 # system
 import re
 import time
@@ -12,13 +15,12 @@ from bs4 import BeautifulSoup
 
 # threading
 import thread
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 
 # my
 from webparser.models import *
 from main.wide import *
-
 import socketio_api 
 
 # Django
@@ -83,7 +85,7 @@ class Manager(object):
 
 		while True:
 			url, timeShift = self.__q.get()
-			print 'Manager.__do_stuff(): {}'.format(url)
+			print('Manager.__do_stuff(): {0}'.format(url))
 
 			try:
 				encoding, title, h1 = webParser(url, timeShift)
@@ -184,6 +186,6 @@ def webParser(url, timeShift):
 		record.comment = getException()
 		record.save()
 
-		raise Exception('error on parsing')
+		raise_with_traceback(Exception("dodgy value"))
 
 	return (encoding, title, h1)

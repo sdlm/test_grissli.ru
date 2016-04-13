@@ -11,7 +11,7 @@ from django.template import RequestContext, loader
 
 # my
 from webparser.models import *
-from webparser.kernel import *
+from webparser.kernel.tasks import *
 from main.wide import *
 
 

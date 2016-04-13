@@ -1,4 +1,5 @@
 django==1.8.11
+future==0.15.2
 
 BeautifulSoup==3.2.1
 bs4==0.0.1
