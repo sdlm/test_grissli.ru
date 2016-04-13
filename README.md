@@ -81,7 +81,7 @@ group by e.id;
 
 Результат
 | InternalNumber | Name/Surname     | Position       | Salary/Month | Tax    | Month |
-| -------------: | :--------------- | :------------- | -----------: | -----: | ----: |
+| --------------:|:-----------------|:---------------|-------------:|-------:|------:|
 |          32894 | John/Terrible    | Manager        |       916.67 | 258.50 |     2 |
 |          23409 | Maggie/Woodstock | Top Manager    |      1250.00 | 325.00 |     2 |
 |          23908 | Joel/Muegos      | CEO            |      1833.33 | 337.67 |     3 |
