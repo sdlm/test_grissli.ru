@@ -80,11 +80,11 @@ group by e.id;
 ```
 
 Результат
-| InternalNumber | Name/Surname     | Position       | Salary/Month | Tax    | Month |
-| --------------:|:-----------------|:---------------|-------------:|-------:|------:|
+| InternalNumber | Name/Surname | Position | Salary/Month | Tax | Month |
+| ---: | :--- | :--- | ---: | ---: | ---: |
 |          32894 | John/Terrible    | Manager        |       916.67 | 258.50 |     2 |
 |          23409 | Maggie/Woodstock | Top Manager    |      1250.00 | 325.00 |     2 |
 |          23908 | Joel/Muegos      | CEO            |      1833.33 | 337.67 |     3 |
 |            128 | Jeroen/van Kapf  | Board Chairman |      3666.67 | 301.00 |     2 |
 
-[screenshot]: http://i.imgur.com/WKBGk4N.png "Скриншот выполнения"
+[Скриншот выполнения](http://i.imgur.com/WKBGk4N.png)
