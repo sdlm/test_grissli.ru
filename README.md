@@ -61,6 +61,7 @@ c virtualenv может возникнуть проблема "name 'PROTOCOL_SS
 ### Решение
 
 Запрос:
+
 ```sql
 select
   p.internal_number as InternalNumber,
@@ -80,6 +81,7 @@ group by e.id;
 ```
 
 Результат
+
 | InternalNumber | Name/Surname | Position | Salary/Month | Tax | Month |
 | ---: | :--- | :--- | ---: | ---: | ---: |
 |          32894 | John/Terrible    | Manager        |       916.67 | 258.50 |     2 |
