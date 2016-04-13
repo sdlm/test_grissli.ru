@@ -149,7 +149,7 @@ def dropResults():
 	
 def webParser(url, timeShift):
 	try:
-		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'}
+		headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0'}
 		if not (re.match('^http://', url) or re.match('^https://', url)):
 			url = 'http://' + url
 		r = requests.get(url, headers = headers)
